@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>やり直しログシート</title>
+  <style>
+    :root {
+      --main: #1f2937;
+      --sub: #4b5563;
+      --line: #d1d5db;
+      --light: #f3f4f6;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --warning: #f59e0b;
+      --ok: #059669;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Meiryo", sans-serif;
+      color: var(--main);
+      background: #e5e7eb;
+      line-height: 1.5;
+    }
+
+    .sheet {
+      width: 297mm;
+      min-height: 210mm;
+      margin: 0 auto;
+      padding: 12mm;
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+
+    .note {
+      margin: 0 0 12px;
+      padding: 8px 12px;
+      border-left: 5px solid var(--accent);
+      background: #eff6ff;
+      font-size: 13px;
+      color: var(--sub);
+    }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: bold;
+      color: var(--sub);
+      margin-bottom: 3px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-size: 12px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    textarea {
+      min-height: 52px;
+      resize: vertical;
+    }
+
+    .section {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      padding: 7px 10px;
+      background: var(--main);
+      color: #fff;
+      font-weight: bold;
+      font-size: 13px;
+    }
+
+    .section-body { padding: 10px; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px 12px;
+    }
+
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px 12px;
+      font-size: 12px;
+    }
+
+    .checks label {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      align-items: center;
+      column-gap: 8px;
+      min-height: 28px;
+      margin: 0;
+      padding: 5px 8px;
+      color: var(--main);
+      font-weight: normal;
+      line-height: 1.35;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .checks input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+      justify-self: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 5px;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--light);
+      text-align: center;
+      font-weight: bold;
+    }
+
+    td input, td select {
+      border: none;
+      padding: 3px;
+      font-size: 11px;
+    }
+
+    .important {
+      border: 2px solid var(--danger);
+      background: #fef2f2;
+    }
+
+    .important .section-title {
+      background: var(--danger);
+    }
+
+    .warning {
+      margin-top: 8px;
+      padding: 8px;
+      border: 1px solid #fbbf24;
+      background: #fffbeb;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .summary-box {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: #fafafa;
+    }
+
+    .card-title {
+      font-size: 11px;
+      color: var(--sub);
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .card input {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .buttons {
+      width: 297mm;
+      margin: 16px auto;
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    button {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+    }
+
+    button.secondary { background: var(--sub); }
+    button.green { background: var(--ok); }
+
+    @media print {
+      @page { size: A4 landscape; margin: 8mm; }
+      body { padding: 0; background: #fff; }
+      .sheet {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+      .buttons { display: none; }
+      input, textarea, select { border-color: #999; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <h1>やり直しログシート</h1>
+    <p class="note">目的：やり直し・ロスの原因を記録し、「印刷チームのミス」だけで片付けず、営業指示・顧客変更・データ不備・段取り不足などを見える化する。</p>
+
+    <div class="top-grid">
+      <div><label>対象期間</label><input type="text" placeholder="例：2026年4月"></div>
+      <div><label>記録担当</label><input type="text"></div>
+      <div><label>部署</label><input type="text" value="デジタルプリントチーム"></div>
+      <div><label>提出先</label><input type="text" placeholder="例：幹部会議／改善会議"></div>
+    </div>
+
+    <div class="section important">
+      <div class="section-title">1. やり直し発生時の基本分類 ※必須</div>
+      <div class="section-body">
+        <div class="checks">
+          <label><input type="checkbox"> 顧客変更</label>
+          <label><input type="checkbox"> 営業指示不足</label>
+          <label><input type="checkbox"> 営業指示変更</label>
+          <label><input type="checkbox"> 色見本後出し</label>
+          <label><input type="checkbox"> 制作データ不備</label>
+          <label><input type="checkbox"> 印刷ミス</label>
+          <label><input type="checkbox"> 後工程都合</label>
+          <label><input type="checkbox"> 納期・段取り不足</label>
+        </div>
+        <div class="warning">※「原因不明」「なんとなくやり直し」は禁止。必ず最も近い原因を選ぶ。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2. ログ一覧</div>
+      <div class="section-body">
+        <table id="logTable">
+          <thead>
+            <tr>
+              <th style="width:7%">日付</th>
+              <th style="width:13%">案件名</th>
+              <th style="width:9%">営業担当</th>
+              <th style="width:10%">原因分類</th>
+              <th style="width:18%">具体的な内容</th>
+              <th style="width:9%">発生部署</th>
+              <th style="width:8%">追加工数</th>
+              <th style="width:8%">材料ロス</th>
+              <th style="width:18%">再発防止案</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="date"></td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td>
+                <select>
+                  <option></option><option>顧客変更</option><option>営業指示不足</option><option>営業指示変更</option><option>色見本後出し</option><option>制作データ不備</option><option>印刷ミス</option><option>後工程都合</option><option>納期・段取り不足</option>
+                </select>
+              </td>
+              <td><input type="text"></td>
+              <td><input type="text"></td>
+              <td><input type="text" placeholder="例：1.5h"></td>
+              <td><input type="text" placeholder="例：塩ビ2m"></td>
+              <td><input type="text"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="warning">記入例：色見本が出力後に届き、営業指示の色合わせと顧客希望が違ったため再出力。追加工数2h、材料ロス塩ビ3m。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3. 月次集計</div>
+      <div class="section-body summary-box">
+        <div class="card"><div class="card-title">やり直し件数</div><input type="text" placeholder="件"></div>
+        <div class="card"><div class="card-title">営業・顧客起因</div><input type="text" placeholder="件"></div>
+        <div class="card"><div class="card-title">制作・データ起因</div><input type="text" placeholder="件"></div>
+        <div class="card"><div class="card-title">印刷チーム起因</div><input type="text" placeholder="件"></div>
+        <div class="card"><div class="card-title">合計ロス時間</div><input type="text" placeholder="h"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">4. 今月の主な原因と改善アクション</div>
+      <div class="section-body grid-2">
+        <div>
+          <label>最も多かった原因</label>
+          <textarea placeholder="例：色見本の後出し、営業指示の曖昧さ、納期直前の変更など"></textarea>
+        </div>
+        <div>
+          <label>来月から実施する改善</label>
+          <textarea placeholder="例：色見本がない案件は色合わせ開始不可。大型案件は事前打ち合わせ必須。"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">5. 幹部・リーダー確認欄</div>
+      <div class="section-body grid-3">
+        <div><label>確認者</label><input type="text"></div>
+        <div><label>確認日</label><input type="date"></div>
+        <div><label>次回確認日</label><input type="date"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button class="green" onclick="addRow()">ログ行を追加</button>
+    <button class="secondary" onclick="clearInputs()">入力内容をクリア</button>
+    <button onclick="window.print()">印刷する</button>
+  </div>
+
+  <script>
+    function addRow() {
+      const tbody = document.querySelector('#logTable tbody');
+      const row = tbody.rows[0].cloneNode(true);
+      row.querySelectorAll('input').forEach(input => input.value = '');
+      row.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+      tbody.appendChild(row);
+    }
+
+    function clearInputs() {
+      if (!confirm('入力内容をすべてクリアしますか？')) return;
+      document.querySelectorAll('input, textarea, select').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else if (el.tagName === 'SELECT') el.selectedIndex = 0;
+        else el.value = '';
+      });
+    }
+  </script>
+</body>
+</html>
